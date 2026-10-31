@@ -20,10 +20,10 @@ class NotePotApp {
     this.adminPanel = new AdminPanel(this.b2Service, (doc) => this.loadDocument(doc));
     this.pendingDownloadAfterAuth = false;
 
-    // Default document state
+    // Default document state (Clean empty page, no pre-filled dummy text)
     const defaultDoc = {
       id: "doc_" + Date.now(),
-      title: "हिंदी असाइनमेंट - पाठ १",
+      title: "Untitled Assignment",
       settings: {
         paperType: "hindi-notebook",
         fontId: "kalam",
@@ -40,17 +40,7 @@ class NotePotApp {
         {
           pageNo: 1,
           date: new Date().toLocaleDateString("en-GB"),
-          content: `विषय: हिंदी हस्तलिखित गृहकार्य एवं निबंध
-
-यहाँ आप अपना पाठ या निबंध सीधे टाइप या पेस्ट कर सकते हैं।
-यह लेख वास्तविक विद्यार्थी की कॉपी जैसा हस्तलिखित दिखाई देता है।
-
-मुख्य विशेषताएँ:
-१. ३०+ से अधिक सुंदर हिंदी एवं अंग्रेज़ी हस्तलिखित फॉन्ट (Kalam, Tillana, Dekko, Caveat...)
-२. हिंदी नोटबुक की लाइनों पर शब्दों का सटीक संतुलन
-३. अक्षरों के बीच का अंतर (Letter Spacing) एवं शब्दों के बीच का अंतर (Word Spacing) बदलने की सुविधा
-४. असाइनमेंट पूरा होने पर हाई-डेफिनिशन मल्टी-पेज PDF डाउनलोड
-५. बैकब्लेज़ B2 १०GB क्लाउड स्टोरेज में सुरक्षित बैकअप`
+          content: ""
         }
       ]
     };
@@ -60,7 +50,9 @@ class NotePotApp {
       const savedDraft = localStorage.getItem("notepot_current_doc_v1");
       if (savedDraft) {
         const parsed = JSON.parse(savedDraft);
-        if (parsed && Array.isArray(parsed.pages) && parsed.pages.length > 0) {
+        // If it was just the old placeholder dummy text, start clean
+        const isOldDummy = parsed?.pages?.[0]?.content?.includes("विषय: हिंदी हस्तलिखित");
+        if (parsed && Array.isArray(parsed.pages) && parsed.pages.length > 0 && !isOldDummy) {
           this.doc = parsed;
         } else {
           this.doc = defaultDoc;
