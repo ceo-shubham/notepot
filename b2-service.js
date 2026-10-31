@@ -53,6 +53,15 @@ export class B2Service {
     return this.currentUser;
   }
 
+  isLoggedIn() {
+    return Boolean(
+      this.currentUser &&
+      this.currentUser.email &&
+      !this.currentUser.email.startsWith("guest@") &&
+      this.currentUser.email.includes("@")
+    );
+  }
+
   isSuperAdmin() {
     return (this.currentUser.email || "").trim().toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
   }

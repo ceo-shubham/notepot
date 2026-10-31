@@ -18,9 +18,10 @@ class NotePotApp {
   constructor() {
     this.b2Service = new B2Service();
     this.adminPanel = new AdminPanel(this.b2Service, (doc) => this.loadDocument(doc));
+    this.pendingDownloadAfterAuth = false;
 
     // Default document state
-    this.doc = {
+    const defaultDoc = {
       id: "doc_" + Date.now(),
       title: "हिंदी असाइनमेंट - पाठ १",
       settings: {
@@ -53,6 +54,23 @@ class NotePotApp {
         }
       ]
     };
+
+    // Restore locally saved document so user work is NEVER lost on reload or auth
+    try {
+      const savedDraft = localStorage.getItem("notepot_current_doc_v1");
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed && Array.isArray(parsed.pages) && parsed.pages.length > 0) {
+          this.doc = parsed;
+        } else {
+          this.doc = defaultDoc;
+        }
+      } else {
+        this.doc = defaultDoc;
+      }
+    } catch (e) {
+      this.doc = defaultDoc;
+    }
 
     this.activePageIndex = 0;
     this.init();
@@ -110,6 +128,9 @@ class NotePotApp {
     const titleInput = document.getElementById("doc-title-input");
     titleInput.addEventListener("input", (e) => {
       this.doc.title = e.target.value;
+      try {
+        localStorage.setItem("notepot_current_doc_v1", JSON.stringify(this.doc));
+      } catch (err) {}
     });
 
     // Paper Type Change
@@ -262,6 +283,44 @@ class NotePotApp {
       this.promptGoogleSignIn();
     });
 
+    // Auth Required Modal listeners
+    const authModal = document.getElementById("modal-auth-required");
+    const closeAuthBtn = document.getElementById("close-auth-modal");
+    if (closeAuthBtn) {
+      closeAuthBtn.addEventListener("click", () => {
+        authModal.classList.add("hidden");
+        this.pendingDownloadAfterAuth = false;
+      });
+    }
+
+    const modalGoogleBtn = document.getElementById("btn-modal-google-login");
+    if (modalGoogleBtn) {
+      modalGoogleBtn.addEventListener("click", () => {
+        this.promptGoogleSignIn();
+      });
+    }
+
+    const modalEmailBtn = document.getElementById("btn-modal-email-login");
+    const modalEmailInput = document.getElementById("auth-modal-email-input");
+    if (modalEmailBtn && modalEmailInput) {
+      modalEmailBtn.addEventListener("click", () => {
+        const email = (modalEmailInput.value || "").trim().toLowerCase();
+        if (!email || !email.includes("@")) {
+          alert("Please enter a valid email address.");
+          return;
+        }
+        const name = email.split("@")[0].replace(/[._-]/g, " ");
+        const user = this.b2Service.setUser({
+          email,
+          name: name.charAt(0).toUpperCase() + name.slice(1)
+        });
+        this.onUserAuthenticated(user);
+      });
+      modalEmailInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") modalEmailBtn.click();
+      });
+    }
+
     // Sign Out
     document.getElementById("menu-logout-btn").addEventListener("click", () => {
       this.b2Service.logout();
@@ -401,6 +460,9 @@ class NotePotApp {
       const contentArea = sheet.querySelector(".notepot-content-area");
       contentArea.addEventListener("input", (e) => {
         pageData.content = e.target.innerText;
+        try {
+          localStorage.setItem("notepot_current_doc_v1", JSON.stringify(this.doc));
+        } catch (err) {}
         this.checkPageOverflow(sheet, contentArea, pageIndex);
       });
 
@@ -548,6 +610,13 @@ class NotePotApp {
 
   // Export Document to High-DPI Multi-Page PDF
   async exportPdf() {
+    // REQUIREMENT: No one can download PDF without logging in
+    if (!this.b2Service.isLoggedIn()) {
+      this.pendingDownloadAfterAuth = true;
+      this.openAuthModal();
+      return;
+    }
+
     const progressModal = document.getElementById("modal-pdf-progress");
     const progressText = document.getElementById("pdf-progress-text");
     const progressBar = document.getElementById("pdf-progress-bar");
@@ -775,6 +844,45 @@ class NotePotApp {
     }
   }
 
+  openAuthModal() {
+    const modal = document.getElementById("modal-auth-required");
+    if (!modal) return;
+
+    // Update active document preview information in modal banner
+    const titleEl = document.getElementById("auth-modal-doc-title");
+    const countEl = document.getElementById("auth-modal-page-count");
+    if (titleEl) titleEl.textContent = this.doc.title || "Untitled Assignment";
+    if (countEl) countEl.textContent = `${this.doc.pages.length} ${this.doc.pages.length === 1 ? 'Page' : 'Pages'}`;
+
+    modal.classList.remove("hidden");
+  }
+
+  onUserAuthenticated(user) {
+    this.updateUserUI();
+
+    // CRITICAL REQUIREMENT:
+    // If user already wrote/created their file and then logs in,
+    // the active document is NEVER cleared or overwritten!
+    this.doc.userEmail = user.email;
+    this.doc.userName = user.name;
+    try {
+      localStorage.setItem("notepot_current_doc_v1", JSON.stringify(this.doc));
+    } catch (e) {}
+
+    // Save document to Backblaze B2 under the authenticated user
+    this.saveDocument(false);
+
+    // Close the auth modal
+    const authModal = document.getElementById("modal-auth-required");
+    if (authModal) authModal.classList.add("hidden");
+
+    // If PDF download was pending, immediately proceed to download the exact preserved file!
+    if (this.pendingDownloadAfterAuth) {
+      this.pendingDownloadAfterAuth = false;
+      this.exportPdf();
+    }
+  }
+
   promptGoogleSignIn() {
     const email = prompt("Enter your Google Account email to sign in to NotePot:", "ceo.shubhampathak@gmail.com");
     if (email && email.includes("@")) {
@@ -783,8 +891,7 @@ class NotePotApp {
         email: email.trim().toLowerCase(),
         name: name.charAt(0).toUpperCase() + name.slice(1)
       });
-      this.updateUserUI();
-      alert(`Welcome ${user.name}! Connected to NotePot Cloud.`);
+      this.onUserAuthenticated(user);
     }
   }
 
@@ -804,7 +911,7 @@ class NotePotApp {
         picture: profile.picture
       });
 
-      this.updateUserUI();
+      this.onUserAuthenticated(user);
     } catch (e) {
       console.error("Google credential parse failed:", e);
     }
