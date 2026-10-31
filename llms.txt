@@ -1,0 +1,17 @@
+# NotePot
+
+> NotePot (https://notepot.zenstro.space) is an online handwriting formatter and assignment generator. It formats typed or pasted Hindi and English text onto authentic lined notebook pages and plain A4 sheets, rendering it with 38+ real handwriting fonts and exporting it to high-resolution multi-page PDF documents.
+
+## Key Capabilities
+- **Hindi Ruled Notebook Formatting**: Formats Devanagari text on authentic ruled lines with standard vertical red margins and header boxes. Line spacing is locked on ruled pages (36px) to preserve natural Shirorekha hanging alignment.
+- **Customizable Spacing Engine**: Allows independent adjustment of letter spacing (character spacing) and word spacing. On white A4 ruled pages, horizontal line spacing is customizable between 24px and 56px.
+- **38+ Handwriting Fonts**: Includes verified Devanagari scripts (Kalam, Tillana, Dekko, Amita, Rozha One, Yatra One, Kurale, Sahitya, Halant, Modak) and Latin scripts (Caveat, Indie Flower, Shadows Into Light, Dancing Script, Patrick Hand, Mali, Gochi Hand, Homemade Apple, Reenie Beanie, Bad Script, Courgette, Just Another Hand, Schoolbell, and more).
+- **Multi-Page PDF Export**: Generates vectorized, print-ready multi-page A4 PDF documents.
+- **Backblaze B2 Cloud Storage**: Provides cloud synchronization and document persistence on Backblaze B2 (10GB capacity).
+- **Publisher**: Zenstro (https://zenstro.space).
+
+## Core Links
+- Editor Application: https://notepot.zenstro.space/
+- Privacy Policy: https://notepot.zenstro.space/privacy.html
+- Terms of Service: https://notepot.zenstro.space/terms.html
+- Parent Network: https://zenstro.space/

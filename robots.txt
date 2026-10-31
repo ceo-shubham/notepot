@@ -1,0 +1,33 @@
+# Robots.txt for NotePot (https://notepot.zenstro.space)
+User-agent: *
+Allow: /
+Disallow: /api/admin
+Disallow: /api/documents?id=
+
+# Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# AI Crawlers & Answer Engines (ChatGPT, Perplexity, Claude, Gemini)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+Sitemap: https://notepot.zenstro.space/sitemap.xml

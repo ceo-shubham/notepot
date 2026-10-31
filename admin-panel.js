@@ -1,5 +1,5 @@
 /**
- * NotePot CEO Super Admin Panel
+ * NotePot CEO Super Admin Console
  * Exclusive for ceo.shubhampathak@gmail.com
  * Allows viewing all users, inspecting all documents, and monitoring Backblaze B2 storage
  */
@@ -18,86 +18,84 @@ export class AdminPanel {
       modal.id = "notepot-admin-modal";
       modal.className = "fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 hidden";
       modal.innerHTML = `
-        <div class="bg-slate-900 border border-amber-500/30 rounded-2xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl text-white overflow-hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl text-white overflow-hidden">
           <!-- Header -->
-          <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+          <div class="px-5 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-950">
             <div class="flex items-center space-x-3">
-              <span class="p-2 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clip-rule="evenodd"/>
-                </svg>
+              <span class="p-1.5 rounded bg-slate-800 text-amber-500 border border-slate-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
               </span>
               <div>
-                <h3 class="text-xl font-bold flex items-center gap-2">
-                  <span>NotePot CEO Super Admin Console</span>
-                  <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">ceo.shubhampathak@gmail.com</span>
+                <h3 class="text-base font-bold flex items-center gap-2">
+                  <span>NotePot Super Admin Console</span>
+                  <span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-mono">ceo.shubhampathak@gmail.com</span>
                 </h3>
-                <p class="text-xs text-slate-400">Inspect user assignments, monitor Backblaze B2 (10GB), and manage Zenstro ecosystem integration</p>
+                <p class="text-xs text-slate-400">Inspect user documents, manage storage on Backblaze B2 (10GB), and monitor Zenstro integration</p>
               </div>
             </div>
             <div class="flex items-center space-x-2">
-              <a href="https://zenstro.space/admin.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 text-xs font-medium flex items-center gap-1 transition">
-                <span>Zenstro Main Admin</span>
+              <a href="https://zenstro.space/admin.html" target="_blank" class="px-2.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1.5 transition">
+                <span>Zenstro Admin Portal</span>
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
               </a>
-              <button id="close-admin-modal" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              <button id="close-admin-modal" class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
               </button>
             </div>
           </div>
 
           <!-- Body -->
-          <div class="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+          <div class="p-5 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
             <!-- Storage & Stats Overview Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
               <!-- Backblaze 10GB Card -->
-              <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4">
+              <div class="bg-slate-950 border border-slate-800 rounded p-4">
                 <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
-                  <span>Backblaze B2 Storage</span>
-                  <span class="text-emerald-400 font-semibold" id="b2-used-percent">0% Used</span>
+                  <span>Backblaze B2</span>
+                  <span class="text-emerald-400 font-mono" id="b2-used-percent">0%</span>
                 </div>
-                <div class="text-2xl font-bold text-white mb-2" id="b2-used-formatted">0 MB <span class="text-xs text-slate-400 font-normal">/ 10 GB</span></div>
-                <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
-                  <div id="b2-storage-bar" class="bg-gradient-to-r from-emerald-500 to-amber-500 h-2 rounded-full transition-all duration-500" style="width: 2%"></div>
+                <div class="text-xl font-bold text-white mb-2" id="b2-used-formatted">0 MB <span class="text-xs text-slate-500 font-normal">/ 10 GB</span></div>
+                <div class="w-full bg-slate-800 rounded h-1.5 overflow-hidden">
+                  <div id="b2-storage-bar" class="bg-emerald-500 h-1.5 rounded transition-all duration-300" style="width: 2%"></div>
                 </div>
-                <div class="text-[11px] text-slate-400 mt-2 flex justify-between">
+                <div class="text-[11px] text-slate-400 mt-2 flex justify-between font-mono">
                   <span>Free: <strong class="text-slate-200" id="b2-free-formatted">10 GB</strong></span>
                   <span>Bucket: <strong class="text-slate-200">zenstro</strong></span>
                 </div>
               </div>
 
               <!-- Total Users -->
-              <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4">
-                <span class="text-xs text-slate-400 block mb-1">Total Registered Users</span>
-                <div class="text-2xl font-bold text-sky-400" id="admin-total-users">0</div>
-                <p class="text-[11px] text-slate-400 mt-2">Active creators across assignments</p>
+              <div class="bg-slate-950 border border-slate-800 rounded p-4">
+                <span class="text-xs text-slate-400 block mb-1">Registered Users</span>
+                <div class="text-xl font-bold text-sky-400 font-mono" id="admin-total-users">0</div>
+                <p class="text-[11px] text-slate-500 mt-2">Active accounts across platform</p>
               </div>
 
               <!-- Total Assignments -->
-              <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4">
-                <span class="text-xs text-slate-400 block mb-1">Total Assignments Created</span>
-                <div class="text-2xl font-bold text-purple-400" id="admin-total-docs">0</div>
-                <p class="text-[11px] text-slate-400 mt-2">Hindi & English handwritten notes</p>
+              <div class="bg-slate-950 border border-slate-800 rounded p-4">
+                <span class="text-xs text-slate-400 block mb-1">Total Assignments</span>
+                <div class="text-xl font-bold text-amber-400 font-mono" id="admin-total-docs">0</div>
+                <p class="text-[11px] text-slate-500 mt-2">Multi-page handwritten files</p>
               </div>
 
               <!-- Storage Files -->
-              <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4">
-                <span class="text-xs text-slate-400 block mb-1">B2 Cloud Files</span>
-                <div class="text-2xl font-bold text-amber-400" id="admin-total-files">0</div>
-                <p class="text-[11px] text-slate-400 mt-2">JSON payloads, PDFs & manifests</p>
+              <div class="bg-slate-950 border border-slate-800 rounded p-4">
+                <span class="text-xs text-slate-400 block mb-1">Stored B2 Files</span>
+                <div class="text-xl font-bold text-slate-200 font-mono" id="admin-total-files">0</div>
+                <p class="text-[11px] text-slate-500 mt-2">Payloads, PDFs, and manifests</p>
               </div>
             </div>
 
             <!-- Users & Inspection Section -->
-            <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-5">
-              <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <div class="bg-slate-950 border border-slate-800 rounded p-4">
+              <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <div>
-                  <h4 class="text-base font-semibold text-white">All Users & Created Assignments</h4>
-                  <p class="text-xs text-slate-400">Select any user to inspect what they wrote, review their notebook pages, or download their PDF</p>
+                  <h4 class="text-sm font-semibold text-white">Registered Users & Documents</h4>
+                  <p class="text-xs text-slate-400">Select any user to inspect their handwritten notes, verify content, or download their PDF</p>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <input type="text" id="admin-user-search" placeholder="Search by email or title..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 w-64">
-                  <button id="admin-refresh-btn" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-medium text-white transition flex items-center gap-1">
+                  <input type="text" id="admin-user-search" placeholder="Filter by email or title..." class="bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-slate-500 w-56">
+                  <button id="admin-refresh-btn" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs font-medium text-white transition flex items-center gap-1">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     <span>Refresh</span>
                   </button>
@@ -105,21 +103,21 @@ export class AdminPanel {
               </div>
 
               <!-- Users and Documents Table -->
-              <div class="overflow-x-auto rounded-lg border border-slate-700/80">
+              <div class="overflow-x-auto rounded border border-slate-800">
                 <table class="w-full text-left text-xs text-slate-300">
-                  <thead class="bg-slate-950 text-slate-400 uppercase font-mono text-[11px]">
+                  <thead class="bg-slate-900 text-slate-400 uppercase font-mono text-[10px]">
                     <tr>
-                      <th class="py-3 px-4">User Email / Creator</th>
-                      <th class="py-3 px-4">Assignment Title</th>
-                      <th class="py-3 px-4">Style & Font</th>
-                      <th class="py-3 px-4">Pages</th>
-                      <th class="py-3 px-4">Last Updated</th>
-                      <th class="py-3 px-4 text-right">Actions</th>
+                      <th class="py-2.5 px-3">User Email</th>
+                      <th class="py-2.5 px-3">Assignment Title</th>
+                      <th class="py-2.5 px-3">Style & Font</th>
+                      <th class="py-2.5 px-3">Pages</th>
+                      <th class="py-2.5 px-3">Last Updated</th>
+                      <th class="py-2.5 px-3 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody id="admin-docs-table-body" class="divide-y divide-slate-800 bg-slate-900/50">
+                  <tbody id="admin-docs-table-body" class="divide-y divide-slate-800/80 bg-slate-950">
                     <tr>
-                      <td colspan="6" class="text-center py-8 text-slate-500">Loading NotePot user assignments...</td>
+                      <td colspan="6" class="text-center py-6 text-slate-500">Loading user assignments...</td>
                     </tr>
                   </tbody>
                 </table>
@@ -127,28 +125,28 @@ export class AdminPanel {
             </div>
 
             <!-- Inspect User Assignment Detail Modal -->
-            <div id="admin-inspect-preview" class="hidden bg-slate-950 border border-slate-700 rounded-xl p-5 space-y-4">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div id="admin-inspect-preview" class="hidden bg-slate-950 border border-slate-800 rounded p-4 space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                 <div>
-                  <h5 class="text-sm font-bold text-amber-400 flex items-center gap-2">
-                    <span>Assignment Inspection Preview</span>
+                  <h5 class="text-xs font-bold text-amber-500 flex items-center gap-2">
+                    <span>Document Inspector:</span>
                     <span id="inspect-doc-title" class="text-white"></span>
                   </h5>
-                  <p class="text-xs text-slate-400">Creator: <strong id="inspect-doc-user" class="text-slate-200"></strong> | Paper: <span id="inspect-doc-paper"></span></p>
+                  <p class="text-[11px] text-slate-400">Creator: <strong id="inspect-doc-user" class="text-slate-200"></strong> | Paper: <span id="inspect-doc-paper"></span></p>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <button id="inspect-load-editor-btn" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  <button id="inspect-load-editor-btn" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-slate-950 font-semibold rounded text-xs transition flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     <span>Open in NotePot Editor</span>
                   </button>
-                  <button id="inspect-close-btn" class="p-1.5 text-slate-400 hover:text-white rounded hover:bg-slate-800">
+                  <button id="inspect-close-btn" class="p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                   </button>
                 </div>
               </div>
 
               <!-- Pages Text Preview -->
-              <div id="inspect-pages-container" class="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+              <div id="inspect-pages-container" class="space-y-3 max-h-80 overflow-y-auto pr-1 custom-scrollbar">
                 <!-- Dynamically rendered pages -->
               </div>
             </div>
@@ -200,8 +198,8 @@ export class AdminPanel {
     const stats = data.stats || {};
 
     // Update Storage Cards
-    document.getElementById("b2-used-percent").textContent = `${sys.usedPercent || 0}% Used`;
-    document.getElementById("b2-used-formatted").innerHTML = `${sys.usedFormatted || "0 B"} <span class="text-xs text-slate-400 font-normal">/ 10 GB</span>`;
+    document.getElementById("b2-used-percent").textContent = `${sys.usedPercent || 0}%`;
+    document.getElementById("b2-used-formatted").innerHTML = `${sys.usedFormatted || "0 B"} <span class="text-xs text-slate-500 font-normal">/ 10 GB</span>`;
     document.getElementById("b2-storage-bar").style.width = `${Math.min(100, Math.max(2, sys.usedPercent || 0))}%`;
     document.getElementById("b2-free-formatted").textContent = sys.freeFormatted || "10 GB";
 
@@ -218,8 +216,8 @@ export class AdminPanel {
     if (!documents || documents.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" class="text-center py-8 text-slate-500">
-            No assignments created yet in NotePot. Create one to test!
+          <td colspan="6" class="text-center py-6 text-slate-500">
+            No assignments recorded yet.
           </td>
         </tr>
       `;
@@ -227,39 +225,30 @@ export class AdminPanel {
     }
 
     tbody.innerHTML = documents.map(doc => {
-      const dateStr = doc.updatedAt ? new Date(doc.updatedAt).toLocaleString() : "Just now";
+      const dateStr = doc.updatedAt ? new Date(doc.updatedAt).toLocaleDateString() : "Recent";
       return `
-        <tr class="hover:bg-slate-800/50 transition">
-          <td class="py-3 px-4 font-medium text-slate-200">
-            <div class="flex items-center space-x-2">
-              <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-[10px] font-bold">
-                ${(doc.userEmail || "U")[0].toUpperCase()}
-              </span>
-              <div>
-                <div>${doc.userName || "Student"}</div>
-                <div class="text-[10px] text-slate-400 font-mono">${doc.userEmail}</div>
-              </div>
-            </div>
+        <tr class="hover:bg-slate-900 transition">
+          <td class="py-2.5 px-3 text-slate-200">
+            <div class="font-medium text-white">${doc.userName || "Student"}</div>
+            <div class="text-[10px] text-slate-400 font-mono">${doc.userEmail}</div>
           </td>
-          <td class="py-3 px-4 text-white font-medium">
+          <td class="py-2.5 px-3 text-white font-medium">
             ${doc.title || "Untitled Assignment"}
           </td>
-          <td class="py-3 px-4 text-slate-300">
-            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">
+          <td class="py-2.5 px-3 text-slate-300">
+            <span class="inline-block px-1.5 py-0.5 rounded text-[10px] bg-slate-900 text-slate-300 border border-slate-800 font-mono">
               ${doc.paperType || "hindi-notebook"}
             </span>
             <span class="text-[10px] text-slate-400 block">${doc.fontFamily || "Kalam"}</span>
           </td>
-          <td class="py-3 px-4 text-slate-300">
-            <span class="px-2 py-0.5 rounded-full bg-slate-800 text-amber-400 font-mono text-[10px]">
-              ${doc.pageCount || 1} ${doc.pageCount === 1 ? 'page' : 'pages'}
-            </span>
+          <td class="py-2.5 px-3 text-slate-300 font-mono text-[11px]">
+            ${doc.pageCount || 1} ${doc.pageCount === 1 ? 'page' : 'pages'}
           </td>
-          <td class="py-3 px-4 text-slate-400 text-[11px]">
+          <td class="py-2.5 px-3 text-slate-400 text-[11px] font-mono">
             ${dateStr}
           </td>
-          <td class="py-3 px-4 text-right space-x-2">
-            <button class="inspect-btn px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded text-[11px] font-medium transition"
+          <td class="py-2.5 px-3 text-right">
+            <button class="inspect-btn px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded text-[11px] font-medium transition"
                     data-user="${doc.userEmail}" data-id="${doc.id}">
               Inspect
             </button>
@@ -305,16 +294,15 @@ export class AdminPanel {
 
       const container = document.getElementById("inspect-pages-container");
       container.innerHTML = (doc.pages || []).map((page, idx) => `
-        <div class="p-4 rounded-lg bg-slate-900 border border-slate-800 text-xs">
-          <div class="flex justify-between text-slate-400 mb-2 font-mono text-[11px] border-b border-slate-800 pb-1">
+        <div class="p-3 rounded bg-slate-900 border border-slate-800 text-xs">
+          <div class="flex justify-between text-slate-400 mb-1.5 font-mono text-[10px] border-b border-slate-800 pb-1">
             <span>Page ${idx + 1} of ${doc.pages.length}</span>
             <span>Date: ${page.date || "N/A"}</span>
           </div>
-          <div class="whitespace-pre-wrap font-sans text-slate-200 leading-relaxed font-hindi">${page.content || "(Blank page)"}</div>
+          <div class="whitespace-pre-wrap font-sans text-slate-200 leading-relaxed">${page.content || "(Blank page)"}</div>
         </div>
       `).join("");
 
-      // Open in Editor button
       const openBtn = document.getElementById("inspect-load-editor-btn");
       openBtn.onclick = () => {
         if (this.onOpenUserDoc) {

@@ -1,6 +1,6 @@
 /* ========================================================
    NotePot Core Stylesheet
-   Realistic Handwritten Notebooks & High-DPI A4 Workspace
+   Precision Handwritten Notebook Engine & A4 Document Canvas
    ======================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amita:wght@400;700&family=Bad+Script&family=Beth+Ellen&family=Caveat:wght@400;600;700&family=Courgette&family=Covered+By+Your+Grace&family=Dancing+Script:wght@400;600;700&family=Dekko&family=Gloria+Hallelujah&family=Gochi+Hand&family=Great+Vibes&family=Halant:wght@400;600&family=Homemade+Apple&family=Indie+Flower&family=Just+Another+Hand&family=Kalam:wght@300;400;700&family=Klee+One:wght@400;600&family=Kurale&family=Loved+by+the+King&family=Mali:ital,wght@0,400;0,600;1,400&family=Marck+Script&family=Modak&family=Nanum+Pen+Script&family=Nothing+You+Could+Do&family=Over+the+Rainbow&family=Pacifico&family=Patrick+Hand&family=Permanent+Marker&family=Reenie+Beanie&family=Rozha+One&family=Sacramento&family=Sahitya:wght@400;700&family=Satisfy&family=Schoolbell&family=Shadows+Into+Light&family=Tillana:wght@400;600;700&family=Yatra+One&family=Yellowtail&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -26,21 +26,21 @@
   height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: #0f172a;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.4);
-  border-radius: 9999px;
+  background: #334155;
+  border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.7);
+  background: #475569;
 }
 
 /* Base Body */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #0b0f17;
-  color: #f8fafc;
+  background-color: #090d16;
+  color: #f1f5f9;
   overflow-x: hidden;
 }
 
@@ -54,17 +54,13 @@ body {
   min-height: var(--page-height);
   max-height: var(--page-height);
   position: relative;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
   box-sizing: border-box;
   page-break-after: always;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.notepot-page-sheet:hover {
-  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(251, 191, 36, 0.15);
+  border-radius: 2px;
 }
 
 /* ========================================================
@@ -77,10 +73,10 @@ body {
   /* Ruled lines pattern */
   background-image: 
     /* Red left vertical margin line */
-    linear-gradient(to right, transparent var(--margin-left), #f87171 var(--margin-left), #f87171 calc(var(--margin-left) + 1.5px), transparent calc(var(--margin-left) + 2px)),
+    linear-gradient(to right, transparent var(--margin-left), #ef4444 var(--margin-left), #ef4444 calc(var(--margin-left) + 1.5px), transparent calc(var(--margin-left) + 2px)),
     /* Top double red margin line */
-    linear-gradient(to bottom, transparent calc(var(--margin-top) - 14px), #f87171 calc(var(--margin-top) - 14px), #f87171 calc(var(--margin-top) - 12.5px), transparent calc(var(--margin-top) - 12.5px)),
-    linear-gradient(to bottom, transparent calc(var(--margin-top) - 8px), #f87171 calc(var(--margin-top) - 8px), #f87171 calc(var(--margin-top) - 6.5px), transparent calc(var(--margin-top) - 6.5px)),
+    linear-gradient(to bottom, transparent calc(var(--margin-top) - 14px), #ef4444 calc(var(--margin-top) - 14px), #ef4444 calc(var(--margin-top) - 12.5px), transparent calc(var(--margin-top) - 12.5px)),
+    linear-gradient(to bottom, transparent calc(var(--margin-top) - 8px), #ef4444 calc(var(--margin-top) - 8px), #ef4444 calc(var(--margin-top) - 6.5px), transparent calc(var(--margin-top) - 6.5px)),
     /* Ruled blue lines aligned perfectly to line-spacing */
     repeating-linear-gradient(to bottom, transparent, transparent calc(var(--line-spacing) - 1px), #93c5fd calc(var(--line-spacing) - 1px), #93c5fd var(--line-spacing));
   background-position: 0 0, 0 0, 0 0, 0 var(--margin-top);
@@ -92,7 +88,7 @@ body {
   background-color: #fffdfa;
   background-image: 
     /* Red vertical left margin */
-    linear-gradient(to right, transparent var(--margin-left), #f87171 var(--margin-left), #f87171 calc(var(--margin-left) + 1.5px), transparent calc(var(--margin-left) + 2px)),
+    linear-gradient(to right, transparent var(--margin-left), #ef4444 var(--margin-left), #ef4444 calc(var(--margin-left) + 1.5px), transparent calc(var(--margin-left) + 2px)),
     /* Double guide lines */
     repeating-linear-gradient(to bottom, 
       transparent 0px, 
@@ -149,14 +145,13 @@ body {
   position: absolute;
   top: 20px;
   right: var(--margin-right);
-  border: 1.5px solid #f87171;
-  border-radius: 6px;
-  padding: 4px 12px;
+  border: 1px solid #ef4444;
+  border-radius: 4px;
+  padding: 4px 10px;
   font-family: 'Kalam', cursive, sans-serif;
   font-size: 13px;
   color: #b91c1c;
-  background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  background-color: #ffffff;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -171,7 +166,7 @@ body {
   font-family: inherit;
   font-size: 13px;
   width: 90px;
-  padding: 0 4px;
+  padding: 0 2px;
   outline: none;
 }
 
@@ -199,12 +194,7 @@ body {
 
 /* Realistic Ink Bleed Effect */
 .ink-bleed-active .notepot-content-area {
-  text-shadow: 0 0 0.5px var(--ink-shadow), 0 0.2px 0.4px var(--ink-shadow);
-}
-
-/* Organic Tilt Effect */
-.organic-tilt-active .notepot-content-area {
-  transform: rotate(-0.15deg);
+  text-shadow: 0 0 0.5px var(--ink-shadow);
 }
 
 /* Paper Grain Texture Overlay */
@@ -212,7 +202,7 @@ body {
   pointer-events: none;
   position: absolute;
   inset: 0;
-  opacity: 0.04;
+  opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   z-index: 5;
 }
@@ -231,35 +221,28 @@ body {
 }
 
 .margin-binder-hole {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: #0b0f17;
-  box-shadow: inset 0 2px 3px rgba(0,0,0,0.4), 0 1px 1px rgba(255,255,255,0.8);
+  background: #090d16;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
 }
 
-/* Overflow Warning Pill */
+/* Overflow Warning */
 .page-overflow-warning {
   position: absolute;
   bottom: 12px;
   right: 16px;
-  background-color: #ef4444;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 9999px;
+  background-color: #dc2626;
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
   font-size: 11px;
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 4px;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
-  animation: pulse 2s infinite;
   z-index: 20;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
 }
 
 /* Print/PDF Export Optimization */

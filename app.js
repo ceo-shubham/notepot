@@ -77,7 +77,7 @@ class NotePotApp {
 
     // Group 1: Hindi Handwriting
     const hindiGroup = document.createElement("optgroup");
-    hindiGroup.label = "✍️ Hindi Handwriting & Scripts";
+    hindiGroup.label = "Hindi Handwriting & Devanagari Scripts";
     const hindiFonts = HANDWRITTEN_FONTS.filter(f => f.category === "hindi");
     hindiFonts.forEach(f => {
       const opt = document.createElement("option");
@@ -91,7 +91,7 @@ class NotePotApp {
 
     // Group 2: English & Universal Handwriting
     const engGroup = document.createElement("optgroup");
-    engGroup.label = "🖋️ English & Universal Handwriting";
+    engGroup.label = "English & Latin Handwriting";
     const engFonts = HANDWRITTEN_FONTS.filter(f => f.category === "english");
     engFonts.forEach(f => {
       const opt = document.createElement("option");
@@ -433,7 +433,7 @@ class NotePotApp {
         warning = document.createElement("div");
         warning.className = "page-overflow-warning no-print cursor-pointer";
         warning.innerHTML = `
-          <span>⚠️ Page Full - Click to Add Next Page</span>
+          <span>Page Limit Reached • Click to Add Page</span>
         `;
         warning.addEventListener("click", () => this.addNewPage());
         sheet.appendChild(warning);
@@ -583,9 +583,9 @@ class NotePotApp {
     try {
       const res = await this.b2Service.saveDocument(this.doc);
       if (res.ok) {
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>B2 Cloud Synced</span>`;
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Cloud Synced</span>`;
         if (showNotification) {
-          alert("✅ Assignment saved successfully to Backblaze B2 (10GB)!");
+          alert("Assignment saved successfully to Backblaze B2 (10GB).");
         }
       } else {
         badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span>Saved Locally</span>`;
@@ -608,16 +608,16 @@ class NotePotApp {
     const list = document.getElementById("templates-list-container");
 
     list.innerHTML = SAMPLE_TEMPLATES.map(t => `
-      <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/80 hover:border-amber-500/50 transition cursor-pointer template-card flex items-center justify-between" data-id="${t.id}">
+      <div class="p-3.5 rounded bg-slate-950 border border-slate-800 hover:border-slate-700 transition cursor-pointer template-card flex items-center justify-between" data-id="${t.id}">
         <div>
-          <h4 class="font-bold text-sm text-white flex items-center gap-2">
+          <h4 class="font-bold text-xs text-white flex items-center gap-2">
             <span>${t.title}</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono">${t.paperType}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono border border-slate-700">${t.paperType}</span>
           </h4>
           <p class="text-xs text-slate-400 mt-1 line-clamp-1">${t.pages[0].content.substring(0, 100)}...</p>
         </div>
-        <button class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition">
-          Use Template
+        <button class="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-slate-950 font-semibold rounded text-xs transition">
+          Use
         </button>
       </div>
     `).join("");
