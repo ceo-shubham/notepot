@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="hi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotePot - Authentic Handwritten Notebook & Assignment Maker | ZENSTRO</title>
+  <meta name="description" content="Turn typed or pasted text into authentic Hindi and English handwritten notebook pages. 30+ handwritten fonts, ruled line snapping, PDF download, and Backblaze B2 cloud storage.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f59e0b'><path d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'/></svg>">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Identity Services (GIS) for Google Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- jsPDF and html2canvas for High-Definition Multi-Page PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- NotePot Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Doc Title -->
+      <div class="flex items-center space-x-3 min-w-0">
+        <a href="/" class="flex items-center space-x-2.5 flex-shrink-0 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+            </svg>
+          </div>
+          <div class="hidden sm:block">
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-lg tracking-tight text-white">Note<span class="text-amber-400">Pot</span></span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono border border-slate-700">v1.0</span>
+            </div>
+            <p class="text-[10px] text-slate-400 -mt-1">By <a href="https://zenstro.space" target="_blank" class="text-amber-400/80 hover:underline">ZENSTRO</a></p>
+          </div>
+        </a>
+
+        <!-- Separator -->
+        <div class="h-6 w-px bg-slate-800 hidden sm:block"></div>
+
+        <!-- Editable Assignment Title -->
+        <div class="flex items-center space-x-2 min-w-0">
+          <input type="text" id="doc-title-input" value="हिंदी असाइनमेंट - पाठ १" 
+                 class="bg-transparent hover:bg-slate-800/60 focus:bg-slate-800 px-2 py-1 rounded text-sm font-medium text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500/50 truncate max-w-[200px] sm:max-w-xs transition"
+                 title="Click to rename assignment">
+          <span id="save-status-badge" class="hidden md:inline-flex items-center gap-1 text-[11px] text-emerald-400 font-mono bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>B2 Cloud Synced</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Actions, Export & User Auth -->
+      <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+        <!-- Sample Templates Button -->
+        <button id="btn-templates" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          <span class="hidden md:inline">Templates</span>
+        </button>
+
+        <!-- My Assignments Drawer Button -->
+        <button id="btn-my-docs" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          <span class="hidden md:inline">My Assignments</span>
+        </button>
+
+        <!-- Save Button -->
+        <button id="btn-save-doc" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+          <span>Save</span>
+        </button>
+
+        <!-- EXPORT FULL PDF (PRIMARY BUTTON) -->
+        <button id="btn-export-pdf" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Download PDF</span>
+        </button>
+
+        <!-- CEO Super Admin Button (Hidden by default, shown for ceo.shubhampathak@gmail.com) -->
+        <button id="btn-ceo-admin" class="hidden px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold transition items-center gap-1">
+          <span class="text-sm">👑</span>
+          <span class="hidden lg:inline">CEO Admin</span>
+        </button>
+
+        <!-- User Profile / Login Button -->
+        <div class="relative" id="user-auth-container">
+          <button id="btn-auth-trigger" class="flex items-center space-x-2 p-1 pl-2 pr-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700/80 transition text-xs">
+            <div id="user-avatar" class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold text-xs">G</div>
+            <span id="user-display-name" class="font-medium text-slate-300 max-w-[90px] truncate">Guest</span>
+            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+
+          <!-- User Menu Dropdown -->
+          <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-slate-900 border border-slate-800 shadow-xl py-2 z-50 text-xs">
+            <div class="px-4 py-2 border-b border-slate-800">
+              <p class="font-semibold text-white truncate" id="menu-user-name">Guest Student</p>
+              <p class="text-slate-400 text-[11px] truncate font-mono" id="menu-user-email">guest@notepot.zenstro.space</p>
+            </div>
+            <button id="menu-google-signin-btn" class="w-full text-left px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center gap-2">
+              <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27c3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10c5.35 0 9.25-3.67 9.25-9.09c0-.66-.07-1.3-.15-1.81z"/></svg>
+              <span>Sign in with Google</span>
+            </button>
+            <a href="https://zenstro.space" target="_blank" class="w-full text-left px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center gap-2">
+              <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              <span>Zenstro Space Ecosystem</span>
+            </a>
+            <button id="menu-logout-btn" class="w-full text-left px-4 py-2 text-rose-400 hover:bg-slate-800 transition border-t border-slate-800/80 mt-1">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Comprehensive Notebook Formatting Toolbar -->
+  <section class="bg-slate-900 border-b border-slate-800/80 px-4 py-3 shadow-md no-print sticky top-16 z-30">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      
+      <!-- Left Group: Paper Style, Font Selector, Font Size -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        
+        <!-- Paper Style Selector -->
+        <div class="flex items-center space-x-1.5">
+          <label class="text-slate-400 font-medium text-[11px] hidden sm:inline">Paper:</label>
+          <select id="select-paper-type" class="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none">
+            <option value="hindi-notebook" selected>📔 Hindi Notebook (Ruled & Red Margin)</option>
+            <option value="hindi-double-line">📖 Hindi Two-Line Notebook (Practice)</option>
+            <option value="white-ruled">📄 White Ruled A4 (Adjustable Lines)</option>
+            <option value="white-plain">📝 White Plain A4 (Blank)</option>
+            <option value="math-grid">📐 Math Grid Notebook</option>
+            <option value="vintage-parchment">📜 Vintage Parchment Paper</option>
+          </select>
+        </div>
+
+        <!-- 30+ Handwritten Fonts Selector -->
+        <div class="flex items-center space-x-1.5">
+          <label class="text-slate-400 font-medium text-[11px] hidden sm:inline">Handwriting:</label>
+          <select id="select-font-family" class="bg-slate-800 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none max-w-[210px]">
+            <!-- Dynamically populated with 38+ fonts -->
+          </select>
+        </div>
+
+        <!-- Font Size Slider & Value -->
+        <div class="flex items-center space-x-1.5 bg-slate-800/60 border border-slate-700/60 rounded-lg px-2.5 py-1">
+          <label class="text-slate-400 text-[11px]">Size:</label>
+          <input type="range" id="slider-font-size" min="16" max="36" value="22" class="w-16 h-1.5 bg-slate-700 rounded-lg accent-amber-500 cursor-pointer">
+          <span id="label-font-size" class="text-slate-200 font-mono w-6 text-right">22px</span>
+        </div>
+
+        <!-- Text Alignment -->
+        <div class="flex items-center rounded-lg bg-slate-800 border border-slate-700 p-0.5" id="alignment-group">
+          <button data-align="left" class="p-1 rounded text-amber-400 bg-slate-700 transition" title="Align Left">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h14"/></svg>
+          </button>
+          <button data-align="center" class="p-1 rounded text-slate-400 hover:text-white transition" title="Align Center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M5 18h14"/></svg>
+          </button>
+          <button data-align="right" class="p-1 rounded text-slate-400 hover:text-white transition" title="Align Right">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M6 18h14"/></svg>
+          </button>
+          <button data-align="justify" class="p-1 rounded text-slate-400 hover:text-white transition" title="Justify">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Group: Line Spacing (Locked for Hindi), Word Spacing, Letter Spacing, Ink Color -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        
+        <!-- LINE DISTANCE (CRITICAL USER REQUIREMENT) -->
+        <div class="flex items-center space-x-1.5 bg-slate-800/60 border border-slate-700/60 rounded-lg px-2.5 py-1" id="line-spacing-container">
+          <label class="text-slate-400 text-[11px] flex items-center gap-1">
+            <span>Line Gap:</span>
+            <span id="line-lock-indicator" class="text-amber-400" title="Locked on Hindi Ruled Notebook to keep handwriting aligned with notebook lines">🔒</span>
+          </label>
+          <input type="range" id="slider-line-spacing" min="24" max="56" value="36" class="w-16 h-1.5 bg-slate-700 rounded-lg accent-amber-500 cursor-pointer disabled:opacity-40" disabled>
+          <span id="label-line-spacing" class="text-slate-200 font-mono w-7 text-right">36px</span>
+        </div>
+
+        <!-- WORD SPACING -->
+        <div class="flex items-center space-x-1.5 bg-slate-800/60 border border-slate-700/60 rounded-lg px-2.5 py-1">
+          <label class="text-slate-400 text-[11px]">Word Gap:</label>
+          <input type="range" id="slider-word-spacing" min="-2" max="20" value="4" class="w-14 h-1.5 bg-slate-700 rounded-lg accent-amber-500 cursor-pointer">
+          <span id="label-word-spacing" class="text-slate-200 font-mono w-6 text-right">4px</span>
+        </div>
+
+        <!-- LETTER SPACING (TEXT KE BEECH KA DISTANCE) -->
+        <div class="flex items-center space-x-1.5 bg-slate-800/60 border border-slate-700/60 rounded-lg px-2.5 py-1">
+          <label class="text-slate-400 text-[11px]">Letter Gap:</label>
+          <input type="range" id="slider-letter-spacing" min="-1" max="10" step="0.5" value="0.5" class="w-14 h-1.5 bg-slate-700 rounded-lg accent-amber-500 cursor-pointer">
+          <span id="label-letter-spacing" class="text-slate-200 font-mono w-8 text-right">0.5px</span>
+        </div>
+
+        <!-- INK COLOR PRESETS -->
+        <div class="flex items-center space-x-1.5 bg-slate-800/60 border border-slate-700/60 rounded-lg px-2 py-1">
+          <label class="text-slate-400 text-[11px]">Ink:</label>
+          <div class="flex items-center space-x-1" id="ink-presets-container">
+            <button class="w-4 h-4 rounded-full bg-[#1e3a8a] ring-2 ring-amber-400 transition transform hover:scale-110" data-color="#1e3a8a" title="Ballpoint Blue"></button>
+            <button class="w-4 h-4 rounded-full bg-[#2563eb] transition transform hover:scale-110" data-color="#2563eb" title="Royal Gel Blue"></button>
+            <button class="w-4 h-4 rounded-full bg-[#0f172a] transition transform hover:scale-110" data-color="#0f172a" title="Pilot Navy"></button>
+            <button class="w-4 h-4 rounded-full bg-[#18181b] transition transform hover:scale-110" data-color="#18181b" title="Gel Black"></button>
+            <button class="w-4 h-4 rounded-full bg-[#dc2626] transition transform hover:scale-110" data-color="#dc2626" title="Teacher Red"></button>
+            <button class="w-4 h-4 rounded-full bg-[#15803d] transition transform hover:scale-110" data-color="#15803d" title="Scholar Green"></button>
+          </div>
+          <input type="color" id="input-custom-ink" value="#1e3a8a" class="w-4 h-4 rounded cursor-pointer border-0 p-0 bg-transparent" title="Custom Ink Color">
+        </div>
+
+        <!-- Realism Effects Dropdown / Toggles -->
+        <div class="flex items-center space-x-1">
+          <button id="toggle-ink-bleed" class="px-2 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-medium transition" title="Toggle realistic ink absorption bleed">
+            💧 Bleed
+          </button>
+          <button id="btn-quick-paste" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-medium transition flex items-center gap-1" title="Paste text to auto-distribute across pages">
+            <span>📋</span>
+            <span>Paste Text</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notice Banner for Hindi Line Alignment Constraint -->
+  <div id="hindi-alignment-banner" class="bg-amber-950/40 border-b border-amber-800/40 px-4 py-1.5 text-center text-xs text-amber-300/90 no-print flex items-center justify-center gap-2">
+    <span>🔒</span>
+    <span><strong>Hindi Notebook Alignment:</strong> Line distance is locked so Hindi letters align and hang naturally from the notebook ruled lines. You can freely adjust <strong>Word Gap</strong> and <strong>Letter Gap (Text ke beech ka distance)</strong>! Switch to <strong>White Ruled A4</strong> to adjust line gap freely.</span>
+  </div>
+
+  <!-- Workspace & Main Canvas -->
+  <main class="flex-1 overflow-y-auto p-4 sm:p-8 flex flex-col items-center custom-scrollbar bg-slate-950">
+    
+    <!-- Page Controls Bar (Page 1 of N, Zoom, Add Page) -->
+    <div class="w-full max-w-[794px] mb-4 flex items-center justify-between no-print px-2">
+      <div class="flex items-center space-x-2">
+        <span class="text-xs text-slate-400 font-mono" id="page-counter-badge">Page 1 of 1</span>
+        <button id="btn-prev-page" class="p-1 rounded bg-slate-800 text-slate-300 hover:text-white transition disabled:opacity-40" disabled>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button id="btn-next-page" class="p-1 rounded bg-slate-800 text-slate-300 hover:text-white transition disabled:opacity-40" disabled>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <!-- Add Page Button -->
+        <button id="btn-add-page" class="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition flex items-center gap-1 shadow-md shadow-amber-500/10">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <span>Add New Page</span>
+        </button>
+        <!-- Clear Page Button -->
+        <button id="btn-clear-page" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs transition">
+          Clear Page
+        </button>
+      </div>
+    </div>
+
+    <!-- Notebook Pages Canvas Container -->
+    <div id="pages-container" class="space-y-10 w-full flex flex-col items-center">
+      <!-- Pages will be dynamically created and rendered here -->
+    </div>
+
+    <!-- Bottom Add Page floating button -->
+    <div class="mt-8 mb-12 text-center no-print">
+      <button id="btn-bottom-add-page" class="px-5 py-2.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center gap-2 shadow-lg mx-auto">
+        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <span>Add Page to Assignment</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- ========================================================
+       MODALS & DRAWERS
+       ======================================================== -->
+
+  <!-- 1. Templates / Sample Text Modal -->
+  <div id="modal-templates" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl text-white overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">⚡</span>
+          <h3 class="text-lg font-bold">Sample Handwritten Assignment Templates</h3>
+        </div>
+        <button id="close-templates-modal" class="text-slate-400 hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto space-y-4 flex-1 custom-scrollbar" id="templates-list-container">
+        <!-- Templates inserted dynamically from sample-data.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Quick Paste Text Modal (Auto Page Splitter) -->
+  <div id="modal-quick-paste" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl text-white overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">📋</span>
+          <h3 class="text-lg font-bold">Paste Assignment Text</h3>
+        </div>
+        <button id="close-quick-paste-modal" class="text-slate-400 hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-6 space-y-4 flex-1">
+        <p class="text-xs text-slate-400">Paste your Hindi or English notes/essay below. NotePot will convert it into handwritten script and automatically create multiple notebook pages if needed!</p>
+        <textarea id="paste-input-text" rows="10" placeholder="यहाँ अपना हिंदी या अंग्रेज़ी टेक्स्ट पेस्ट करें..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs font-sans text-slate-200 placeholder-slate-600 focus:outline-none focus:border-amber-500 custom-scrollbar"></textarea>
+        <div class="flex items-center justify-between">
+          <div class="text-[11px] text-slate-400">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="chk-auto-split" checked class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0">
+              <span>Automatically split into multiple pages if text exceeds one page</span>
+            </label>
+          </div>
+          <button id="btn-confirm-paste" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition">
+            Apply to Notebook
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. My Saved Assignments Modal -->
+  <div id="modal-my-docs" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl text-white overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">📂</span>
+          <div>
+            <h3 class="text-lg font-bold">My Saved Assignments</h3>
+            <p class="text-[11px] text-slate-400">Backed up on Backblaze B2 & LocalStorage</p>
+          </div>
+        </div>
+        <button id="close-my-docs-modal" class="text-slate-400 hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto space-y-3 flex-1 custom-scrollbar" id="saved-docs-list-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. PDF Generation Progress Modal -->
+  <div id="modal-pdf-progress" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-xl animate-spin">
+        ⏳
+      </div>
+      <h3 class="text-base font-bold text-white">Generating High-DPI PDF...</h3>
+      <p class="text-xs text-slate-400" id="pdf-progress-text">Rendering notebook page 1 of 1 with handwritten fonts...</p>
+      <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+        <div id="pdf-progress-bar" class="bg-amber-500 h-2 rounded-full transition-all duration-300" style="width: 25%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Main Logic Script (ES Module) -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

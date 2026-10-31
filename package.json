@@ -1,0 +1,23 @@
+{
+  "name": "notepot",
+  "version": "1.0.0",
+  "description": "NotePot - Authentic Handwritten Hindi & English Notebook Assignment Web Application with 30+ Fonts, PDF Export, Backblaze B2 Storage, and Zenstro Integration",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx wrangler pages dev . --port 8788",
+    "deploy": "npx wrangler pages deploy . --project-name=notepot"
+  },
+  "keywords": [
+    "handwriting",
+    "hindi-notebook",
+    "assignment-maker",
+    "pdf-generator",
+    "backblaze-b2",
+    "zenstro"
+  ],
+  "author": "Shubham Pathak <ceo.shubhampathak@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^4.156.0"
+  }
+}
