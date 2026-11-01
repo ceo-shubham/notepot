@@ -26,21 +26,21 @@
   height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #ffffff;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #e5e7eb;
   border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #cbd5e1;
 }
 
-/* Base Body (Clean Workspace Desk) */
+/* Base Body (Clean Pure White Workspace Desk) */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #f1f5f9;
-  color: #0f172a;
+  background-color: #ffffff;
+  color: #111827;
   overflow-x: hidden;
 }
 
@@ -55,8 +55,8 @@ body {
   max-height: var(--page-height);
   position: relative;
   background-color: #ffffff;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;

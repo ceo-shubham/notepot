@@ -440,10 +440,10 @@ class NotePotApp {
         <div class="notepot-content-area" contenteditable="true" spellcheck="false" 
              style="font-family: ${fontObj.family}; text-align: ${this.doc.settings.alignment}; line-height: ${this.doc.settings.lineSpacing}px; word-spacing: ${this.doc.settings.wordSpacing}px; letter-spacing: ${this.doc.settings.letterSpacing}px; font-size: ${this.doc.settings.fontSize}px; color: ${this.doc.settings.inkColor};">${pageData.content || ""}</div>
 
-        <!-- Delete Page Button (if more than 1 page) -->
+        <!-- Delete Page Button (if more than 1 page — Zero Icons) -->
         ${this.doc.pages.length > 1 ? `
-          <button class="btn-delete-page no-print absolute top-3 left-4 p-1 rounded-md bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white transition text-xs" title="Delete this page">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          <button class="btn-delete-page no-print absolute top-3 left-4 px-2 py-0.5 rounded border border-neutral-300 bg-white hover:bg-neutral-100 text-neutral-600 hover:text-black transition text-xs font-medium" title="Delete this page">
+            Delete Page
           </button>
         ` : ""}
       `;
@@ -746,11 +746,11 @@ class NotePotApp {
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <button class="btn-load-doc px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition" data-id="${d.id}">
+            <button class="btn-load-doc px-3 py-1 bg-black hover:bg-neutral-800 text-white font-medium rounded text-xs transition" data-id="${d.id}">
               Open
             </button>
-            <button class="btn-del-doc p-1.5 text-slate-400 hover:text-rose-400 transition" data-id="${d.id}" title="Delete">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            <button class="btn-del-doc px-2.5 py-1 text-xs text-neutral-500 hover:text-black border border-neutral-200 rounded hover:bg-neutral-50 transition" data-id="${d.id}" title="Delete">
+              Delete
             </button>
           </div>
         </div>
